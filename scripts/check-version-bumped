@@ -6,7 +6,8 @@ get_sha() { git rev-parse --short "$1"; }
 get_version() { git_checkout "$1" && bump-my-version show current_version; }
 git_checkout() { git checkout "$1" >/dev/null 2>&1; }
 has_one_commit() { git rev-parse --verify HEAD >/dev/null 2>&1; }
-have_bump_my_version() { command -v bump-my-version >/dev/null 2>&1; }
+have_command() { command -v "$1" >/dev/null 2>&1; }
+have_bump_my_version() { have_command 'bump-my-version'; }
 is_repo_clean() { [ -z "$(git status --porcelain)" ]; }
 is_valid_sha() { git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; }
 
@@ -14,7 +15,10 @@ main() {
 	if ! has_one_commit; then
 		echo_date "There must be at least 1 commit; got none" >&2 && return 1
 	elif ! have_bump_my_version; then
-		echo_date "'bump-my-version' must be available" >&2 && return 1
+		if ! have_command pip; then
+			echo_date "'bump-my-version' or 'pip' must be available" >&2 && return 1
+		fi
+		pip install bump-my-version
 	elif ! is_repo_clean; then
 		echo_date "Repo must be clean" >&2 && return 1
 	elif [ $# -ne 0 ]; then
