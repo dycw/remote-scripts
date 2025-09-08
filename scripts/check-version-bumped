@@ -36,6 +36,8 @@ is_valid_sha() {
 main() {
 	if ! at_least_one_commit_exists; then
 		echo_date "There must be at least 1 commit; got none" >&2 && exit 1
+	elif [ -n "$(git status --porcelain)" ]; then
+		echo_date "Repo must be clean" >&2 && exit 1
 	elif ! command -v bump-my-version >/dev/null 2>&1; then
 		echo_date "'bump-my-version' must be available" >&2 && exit 1
 	elif [ $# -ge 2 ]; then
