@@ -14,11 +14,8 @@ is_valid_sha() { git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; }
 main() {
 	if ! has_one_commit; then
 		echo_date "There must be at least 1 commit; got none" >&2 && return 1
-	elif ! have_bump_my_version; then
-		if ! have_command pip; then
-			echo_date "'bump-my-version' or 'pip' must be available" >&2 && return 1
-		fi
-		pip install bump-my-version
+	elif ! have_bump_my_version && ! have_command pip; then
+		echo_date "'bump-my-version' or 'pip' must be available" >&2 && return 1
 	elif ! is_repo_clean; then
 		echo_date "Repo must be clean" >&2 && return 1
 	elif [ $# -ne 0 ]; then
@@ -34,6 +31,9 @@ main() {
 	remote_sha=$(get_sha origin/master)
 	if ! is_valid_sha "${remote_sha}"; then
 		echo_date "Invalid remote SHA; got '${remote_sha}'" >&2 && return 1
+	fi
+	if ! have_bump_my_version && have_command pip; then
+		pip install bump-my-version
 	fi
 	local_version=$(get_version "${local_sha}")
 	remote_version=$(get_version "${remote_sha}")
