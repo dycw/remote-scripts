@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+# Requires: curl
+# Fetch current public IPv4 address
+ip="$(curl -s https://api.ipify.org)"
+
+if [ -n "$ip" ]; then
+	echo "$ip"
+else
+	echo "Could not determine public IP" >&2
+	exit 1
+fi
