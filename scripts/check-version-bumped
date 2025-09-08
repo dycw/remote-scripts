@@ -16,8 +16,8 @@ main() {
 		echo_date "There must be at least 1 commit; got none" >&2 && return 1
 	elif ! have_bump_my_version; then
 		echo_date "'bump-my-version' must be available" >&2 && return 1
-	# elif ! is_repo_clean; then
-	#     echo_date "Repo must be clean" >&2 && return 1
+	elif ! is_repo_clean; then
+		echo_date "Repo must be clean" >&2 && return 1
 	elif [ $# -ne 0 ]; then
 		echo_date "'check-version-bumped' accepts 0 arguments; got $#" >&2
 		return 1
