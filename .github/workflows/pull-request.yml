@@ -6,8 +6,13 @@ on:
       - master
 
 jobs:
+  check-version-bumped:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: curl https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/check-version-bumped | sh -c
+
   shellcheck:
-    name: Shellcheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
