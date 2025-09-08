@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+echo_date() {
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+main() {
+	if [ $# -ne 0 ]; then
+		echo_date "'get-public-ip' accepts 0 arguments; got $#"
+		exit
+	fi
+	ip="$(curl -s https://api.ipify.org)"
+	if [ -n "$ip" ]; then
+		echo "$ip"
+	else
+		echo "Could not determine public IP" >&2
+		exit 1
+	fi
+}
+
+main "$@"
