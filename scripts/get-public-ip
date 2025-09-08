@@ -1,12 +1,21 @@
 #!/usr/bin/env sh
 
-# Requires: curl
-# Fetch current public IPv4 address
-ip="$(curl -s https://api.ipify.org)"
+echo_date() {
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
 
-if [ -n "$ip" ]; then
-	echo "$ip"
-else
-	echo "Could not determine public IP" >&2
-	exit 1
-fi
+main() {
+	if [ $# -ne 0 ]; then
+		echo_date "'get-public-ip' accepts 0 arguments; got $#" >&2
+		exit
+	fi
+	ip="$(curl -s https://api.ipify.org)"
+	if [ -n "$ip" ]; then
+		echo "$ip"
+	else
+		echo_date "Could not determine public IP" >&2
+		exit 1
+	fi
+}
+
+main "$@"
