@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 
-echo_date() {
-	echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
-}
+echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 main() {
 	if [ $# -ne 0 ]; then

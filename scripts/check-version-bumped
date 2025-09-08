@@ -9,7 +9,8 @@ has_one_commit() { git rev-parse --verify HEAD >/dev/null 2>&1; }
 have_command() { command -v "$1" >/dev/null 2>&1; }
 have_bump_my_version() { have_command 'bump-my-version'; }
 is_repo_clean() { [ -z "$(git status --porcelain)" ]; }
-is_valid_sha() { git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; }
+is_valid_rev() { git rev-parse --verify "$1" >/dev/null 2>&1; }
+is_valid_sha() { is_valid_rev "$1^{commit}"; }
 
 main() {
 	if ! has_one_commit; then
