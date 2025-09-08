@@ -11,7 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
-        cache: "pip"
+        with:
+          cache: pip
       - run: pip install bump-my-version
       - run: curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/check-version-bumped | sh -s
 
