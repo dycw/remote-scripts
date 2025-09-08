@@ -1,0 +1,72 @@
+#!/usr/bin/env sh
+
+echo_date() {
+	echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+at_least_one_commit_exists() {
+	if git rev-parse --verify HEAD >/dev/null 2>&1; then
+		true
+	else
+		false
+	fi
+}
+
+have_bump_my_version() {
+	if command -v bump-my-version >/dev/null 2>&1; then
+		true
+	else
+		false
+	fi
+}
+
+is_repo_clean() {
+	if [ -z "$(git status --porcelain)" ]; then
+		true
+	else
+		false
+	fi
+}
+
+is_valid_sha() {
+	if git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; then
+		true
+	else
+		false
+	fi
+}
+
+main() {
+	if ! at_least_one_commit_exists; then
+		echo_date "There must be at least 1 commit; got none" >&2 && exit 1
+	elif ! have_bump_my_version; then
+		echo_date "'bump-my-version' must be available" >&2 && exit 1
+	elif ! is_repo_clean; then
+		echo_date "Repo must be clean" >&2 && exit 1
+	elif [ $# -ge 2 ]; then
+		echo_date "'get-public-ip' accepts [0..1] arguments; got $#" >&2
+		exit 1
+	elif [ $# -eq 0 ]; then
+		curr_sha=$(git rev-parse --short HEAD)
+	else
+		curr_sha=$1
+		if ! is_valid_sha "${curr_sha}"; then
+			echo_date "Invalid SHA; got '${curr_sha}'" >&2 && exit 1
+		fi
+	fi
+	prev_sha="${curr_sha}^"
+	if ! is_valid_sha "${prev_sha}"; then
+		exit 0
+	fi
+	curr_version=$(bump-my-version show current_version)
+	git checkout "${prev_sha}"
+	prev_version=$(bump-my-version show current_version)
+	git checkout "${curr_sha}"
+	if [ "${curr_version}" = "${prev_version}" ]; then
+		exit 1
+	else
+		exit 0
+	fi
+}
+
+main "$@"
