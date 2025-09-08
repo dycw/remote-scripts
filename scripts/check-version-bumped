@@ -58,12 +58,13 @@ main() {
 	if ! is_valid_sha "${prev_sha}"; then
 		return 0
 	fi
+	prev_sha=$(git rev-parse --short "${prev_sha}")
 	curr_version=$(bump-my-version show current_version)
 	git checkout "${prev_sha}" >/dev/null 2>&1
 	prev_version=$(bump-my-version show current_version)
 	git checkout "${curr_sha}" >/dev/null 2>&1
 	if [ "${curr_version}" = "${prev_version}" ]; then
-		return 1
+		echo_date "Both '${curr_sha}' and its previous commit '${prev_sha}' have version '${curr_version}'" >&2 && return 1
 	else
 		return 0
 	fi
