@@ -44,7 +44,7 @@ main() {
 	elif ! is_repo_clean; then
 		echo_date "Repo must be clean" >&2 && exit 1
 	elif [ $# -ge 2 ]; then
-		echo_date "'get-public-ip' accepts [0..1] arguments; got $#" >&2
+		echo_date "'check-version-bumped' accepts [0..1] arguments; got $#" >&2
 		exit 1
 	elif [ $# -eq 0 ]; then
 		curr_sha='master'
