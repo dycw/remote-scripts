@@ -13,33 +13,29 @@ is_valid_sha() { git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; }
 
 main() {
 	if ! has_one_commit; then
-		echo_date "There must be at least 1 commit; got none" >&2 && exit 1
+		echo_date "There must be at least 1 commit; got none" >&2 && return 1
 	elif ! have_bump_my_version; then
-		echo_date "'bump-my-version' must be available" >&2 && exit 1
-	elif ! is_repo_clean; then
-		echo_date "Repo must be clean" >&2 && exit 1
-	elif [ $# -ge 2 ]; then
-		echo_date "'check-version-bumped' accepts [0..1] arguments; got $#" >&2
-		exit 1
-	elif [ $# -eq 0 ]; then
-		target_sha=$(get_head)
-	else
-		target_sha="$1"
-		if ! is_valid_sha "${target_sha}"; then
-			echo_date "Invalid SHA; got '${target_sha}'" >&2 && exit 1
-		fi
+		echo_date "'bump-my-version' must be available" >&2 && return 1
+	# elif ! is_repo_clean; then
+	#     echo_date "Repo must be clean" >&2 && return 1
+	elif [ $# -ne 0 ]; then
+		echo_date "'check-version-bumped' accepts 0 arguments; got $#" >&2
+		return 1
 	fi
-	prev_sha="${target_sha}^"
-	if ! is_valid_sha "${prev_sha}"; then
-		return 0
-	fi
-	prev_sha=$(get_sha "${prev_sha}")
 	curr_sha=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || get_head)
-	target_version=$(get_version "${target_sha}")
-	prev_version=$(get_version "${prev_sha}")
+	local_sha=$(get_head)
+	if ! is_valid_sha "${local_sha}"; then
+		echo_date "Invalid local SHA; got '${local_sha}'" >&2 && return 1
+	fi
+	remote_sha=$(get_sha origin/master)
+	if ! is_valid_sha "${remote_sha}"; then
+		echo_date "Invalid remote SHA; got '${remote_sha}'" >&2 && return 1
+	fi
+	local_version=$(get_version "${local_sha}")
+	remote_version=$(get_version "${remote_sha}")
 	git_checkout "${curr_sha}"
-	if [ "${target_version}" = "${prev_version}" ]; then
-		echo_date "Both '${target_sha}' and its previous commit '${prev_sha}' have version '${target_version}'" >&2 && exit 1
+	if [ "${local_version}" = "${remote_version}" ]; then
+		echo_date "Both local '${local_sha}' and remote '${remote_sha}' have the same version '${local_version}'" >&2 && return 1
 	else
 		return 0
 	fi
