@@ -13,20 +13,20 @@ is_valid_sha() { git rev-parse --verify "$1^{commit}" >/dev/null 2>&1; }
 
 main() {
 	if ! has_one_commit; then
-		echo_date "There must be at least 1 commit; got none" >&2 && return 1
+		echo_date "There must be at least 1 commit; got none" >&2 && exit 1
 	elif ! have_bump_my_version; then
-		echo_date "'bump-my-version' must be available" >&2 && return 1
+		echo_date "'bump-my-version' must be available" >&2 && exit 1
 	elif ! is_repo_clean; then
-		echo_date "Repo must be clean" >&2 && return 1
+		echo_date "Repo must be clean" >&2 && exit 1
 	elif [ $# -ge 2 ]; then
 		echo_date "'check-version-bumped' accepts [0..1] arguments; got $#" >&2
-		return 1
+		exit 1
 	elif [ $# -eq 0 ]; then
 		target_sha=$(get_head)
 	else
 		target_sha="$1"
 		if ! is_valid_sha "${target_sha}"; then
-			echo_date "Invalid SHA; got '${target_sha}'" >&2 && return 1
+			echo_date "Invalid SHA; got '${target_sha}'" >&2 && exit 1
 		fi
 	fi
 	prev_sha="${target_sha}^"
@@ -39,7 +39,7 @@ main() {
 	prev_version=$(get_version "${prev_sha}")
 	git_checkout "${curr_sha}"
 	if [ "${target_version}" = "${prev_version}" ]; then
-		echo_date "Both '${target_sha}' and its previous commit '${prev_sha}' have version '${target_version}'" >&2 && return 1
+		echo_date "Both '${target_sha}' and its previous commit '${prev_sha}' have version '${target_version}'" >&2 && exit 1
 	else
 		return 0
 	fi
