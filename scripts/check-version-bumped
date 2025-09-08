@@ -42,33 +42,22 @@ main() {
 		echo_date "'get-public-ip' accepts [0..1] arguments; got $#" >&2
 		exit 1
 	elif [ $# -eq 0 ]; then
-		current=$(get_latest_commit)
+		curr_sha=$(get_latest_commit)
 	else
-		current=$1
-		if ! is_valid_sha "${current}"; then
-			echo_date "Invalid SHA; got '${current}'" >&2 && exit 1
+		curr_sha=$1
+		if ! is_valid_sha "${curr_sha}"; then
+			echo_date "Invalid SHA; got '${curr_sha}'" >&2 && exit 1
 		fi
 	fi
-	previous=$(get_previous_commit "${current}")
-	if ! is_valid_sha "${previous}"; then
+	prev_sha=$(get_previous_commit "${curr_sha}")
+	if ! is_valid_sha "${prev_sha}"; then
 		exit 0
 	fi
-	echo "current=$current, previous=$previous"
-
-	# if [ $# -eq 0 ]; then
-	#     sha=$(git rev-parse --short HEAD)
-	# fi
-	# if [ $# -ne 1 ]; then
-	#     echo_date "'check-version-bumped' accepts 1 argument; got $#" >&2
-	#     exit 1
-	# fi
-	# ip="$(curl -s https://api.ipify.org)"
-	# if [ -n "$ip" ]; then
-	#     echo "$ip"
-	# else
-	#     echo_date "Could not determine public IP" >&2
-	#     exit 1
-	# fi
+	curr_version=$(bump-my-version show current_version)
+	git checkout "${prev_sha}"
+	prev_version=$(bump-my-version show current_version)
+	git checkout "${curr_sha}"
+	echo "curr=$curr_sha/$curr_version, prev=$prev_sha/$prev_version"
 }
 
 main "$@"
