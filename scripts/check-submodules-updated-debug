@@ -13,7 +13,7 @@ main() {
 			if ! cd "${path}"; then
 				echo_date "Failed to 'cd' into '${path}'" >&2 && exit 1
 			fi
-			if ! git fetch origin master; then
+			if ! git fetch origin master >/dev/null 2>&1; then
 				echo_date "For '${path}', failed to fetch 'origin/master'" >&2 && exit 1
 			fi
 			local_sha=$(get_sha HEAD)
