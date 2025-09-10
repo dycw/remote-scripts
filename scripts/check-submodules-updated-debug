@@ -7,12 +7,18 @@ main() {
 	if [ $# -ne 0 ]; then
 		echo_date "'check-submodules-updated' accepts 0 arguments; got $#" >&2 && return 1
 	fi
+	echo_date "pwd = '$(pwd)'" >&2 && return 1
 	behind=false
 	for path in $(git config --file .gitmodules --get-regexp path | awk '{print $2}'); do
 		if ! (
 			if ! cd "${path}"; then
 				echo_date "Failed to 'cd' into '${path}'" >&2 && exit 1
 			fi
+			echo_date "For '${path}', pwd = '$(pwd)'" >&2 && return 1
+			echo_date "For '${path}', ls = " >&2 && return 1
+			ls -al >&2 && return 1
+			echo_date "For '${path}', ls .git/ = " >&2 && return 1
+			ls -al .git/ >&2 && return 1
 			if ! git fetch origin master; then
 				echo_date "For '${path}', failed to fetch 'origin/master'" >&2 && exit 1
 			fi
