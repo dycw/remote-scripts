@@ -14,11 +14,11 @@ main() {
 			if ! cd "${path}"; then
 				echo_date "Failed to 'cd' into '${path}'" >&2 && exit 1
 			fi
-			echo_date "For '${path}', pwd = '$(pwd)'" >&2 && return 1
-			echo_date "For '${path}', ls = " >&2 && return 1
-			ls -al >&2 && return 1
-			echo_date "For '${path}', ls .git/ = " >&2 && return 1
-			ls -al .git/ >&2 && return 1
+			echo_date "For '${path}', pwd = '$(pwd)'"
+			echo_date "For '${path}', ls = "
+			ls -al
+			echo_date "For '${path}', ls .git/ = "
+			ls -al .git/
 			if ! git fetch origin master; then
 				echo_date "For '${path}', failed to fetch 'origin/master'" >&2 && exit 1
 			fi
