@@ -5,6 +5,13 @@
   always_run: true
   pass_filenames: false
   description: Check submodules updated
+- id: check-submodules-updated-debug
+  name: check-submodules-updated-debug
+  entry: scripts/check-submodules-updated-debug
+  language: script
+  always_run: true
+  pass_filenames: false
+  description: Check submodules updated (debug)
 - id: check-version-bumped
   name: check-version-bumped
   entry: scripts/check-version-bumped
@@ -12,10 +19,3 @@
   always_run: true
   pass_filenames: false
   description: Check version bumped
-- id: check-version-bumped-debug
-  name: check-version-bumped-debug
-  entry: scripts/check-version-bumped-debug
-  language: script
-  always_run: true
-  pass_filenames: false
-  description: Check version bumped (debug)
