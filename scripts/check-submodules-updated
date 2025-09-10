@@ -11,18 +11,15 @@ main() {
 	for path in $(git config --file .gitmodules --get-regexp path | awk '{print $2}'); do
 		if ! (
 			if ! cd "${path}"; then
-				echo_date "Failed to 'cd' into '${path}'" >&2 && return 1
-				exit 1
+				echo_date "Failed to 'cd' into '${path}'" >&2 && exit 1
 			fi
 			if ! git fetch origin master >/dev/null 2>&1; then
-				echo_date "For '${path}', failed to fetch 'origin/master'" >&2 && return 1
-				exit 1
+				echo_date "For '${path}', failed to fetch 'origin/master'" >&2 && exit 1
 			fi
 			local_sha=$(get_sha HEAD)
 			remote_sha=$(get_sha origin/master)
 			if [ "${local_sha}" != "${remote_sha}" ]; then
-				echo_date "For '${path}', local and remote must have the same SHA; got '${local_sha}' and '${remote_sha}'" >&2 && return 1
-				exit 1
+				echo_date "For '${path}', local and remote must have the same SHA; got '${local_sha}' and '${remote_sha}'" >&2 && exit 1
 			fi
 		); then
 			behind=true
