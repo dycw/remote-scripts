@@ -1,3 +1,3 @@
-# `template`
+# `remote-scripts`
 
-Template for generic repositories
+Remote scripts

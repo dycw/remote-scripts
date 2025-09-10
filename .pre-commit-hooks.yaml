@@ -1,0 +1,14 @@
+- id: check-submodules-updated
+  name: check-submodules-updated
+  entry: scripts/check-submodules-updated
+  language: system
+  always_run: true
+  pass_filenames: false
+  description: Check submodules updated
+- id: check-version-bumped
+  name: check-version-bumped
+  entry: scripts/check-version-bumped
+  language: system
+  always_run: true
+  pass_filenames: false
+  description: Check version bumped
