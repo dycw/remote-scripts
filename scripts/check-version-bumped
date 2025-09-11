@@ -6,11 +6,13 @@ have_command() { command -v "$1" >/dev/null 2>&1; }
 have_bump_my_version() { have_command 'bump-my-version'; }
 
 get_origin_master_version() {
-	filename=$1
+	if ! git fetch origin master; then
+		echo_date "Failed to fetch 'origin/master'" >&2 && exit 1
+	fi
 	temp_dir=$(mktemp -d)
 	trap 'rm -rf "${temp_dir}"' EXIT HUP INT TERM
-	if ! git show "origin/master:${filename}" >"${temp_dir}/${filename}"; then
-		echo_date "File '${filename}' does not exist on 'origin/master'" >&2 && return 1
+	if ! git show "origin/master:$1" >"${temp_dir}/$1"; then
+		echo_date "File '$1' does not exist on 'origin/master'" >&2 && return 1
 	fi
 	(
 		cd "${temp_dir}" || exit 1
@@ -35,9 +37,6 @@ main() {
 	current=$(bump-my-version show_current 2>/dev/null)
 	if $# -ne 0; then
 		echo_date "Failed to get current version" >&2 && return 1
-	fi
-	if ! git fetch origin master; then
-		echo_date "Failed to fetch 'origin/master'" >&2 && exit 1
 	fi
 	if [ -f '.bumpversion.toml' ]; then
 		previous=$(get_origin_master_version '.bumpversion.toml')
