@@ -6,8 +6,11 @@ have_command() { command -v "$1" >/dev/null 2>&1; }
 have_bump_my_version() { have_command 'bump-my-version'; }
 
 get_origin_master_version() {
-	if ! git fetch origin master; then
-		echo_date "Failed to fetch 'origin/master'" >&2 && exit 1
+	if ! git show-ref --verify --quiet refs/remotes/origin/master; then
+		echo_date "'origin/master' does not exist; fetching..." >&2 && exit 1
+		if ! git fetch origin master; then
+			echo_date "Failed to fetch 'origin/master'" >&2 && exit 1
+		fi
 	fi
 	temp_dir=$(mktemp -d)
 	trap 'rm -rf "${temp_dir}"' EXIT HUP INT TERM
