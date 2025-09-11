@@ -5,7 +5,7 @@
   always_run: true
   pass_filenames: false
   description: Check submodules updated
-  stages: [post-checkout]
+  stages: [pre-push]
 - id: check-version-bumped
   name: check-version-bumped
   entry: scripts/check-version-bumped
@@ -13,4 +13,4 @@
   always_run: true
   pass_filenames: false
   description: Check version bumped
-  stages: [post-checkout]
+  stages: [pre-push]
