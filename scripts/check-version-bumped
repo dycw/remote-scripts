@@ -15,7 +15,9 @@ get_origin_master_version() {
 		echo_date "File '$1' does not exist on 'origin/master'" >&2 && return 1
 	fi
 	(
-		cd "${temp_dir}" || exit 1
+		if ! cd "${temp_dir}"; then
+			echo_date "Failed to 'cd' into '${temp_dir}'" >&2 && exit 1
+		fi
 		bump-my-version show current_version
 	)
 }
