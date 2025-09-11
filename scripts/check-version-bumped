@@ -36,6 +36,9 @@ main() {
 	if $# -ne 0; then
 		echo_date "Failed to get current version" >&2 && return 1
 	fi
+	if ! git fetch origin master; then
+		echo_date "Failed to fetch 'origin/master'" >&2 && exit 1
+	fi
 	if [ -f '.bumpversion.toml' ]; then
 		previous=$(get_origin_master_version '.bumpversion.toml')
 	elif [ -f 'pyproject.toml' ]; then
