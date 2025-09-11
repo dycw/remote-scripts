@@ -1,10 +1,6 @@
 #!/usr/bin/env sh
 
 echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
-has_one_commit() { git rev-parse --verify HEAD >/dev/null 2>&1; }
-have_command() { command -v "$1" >/dev/null 2>&1; }
-have_bump_my_version() { have_command 'bump-my-version'; }
-
 get_origin_master_version() {
 	if ! git show-ref --verify --quiet refs/remotes/origin/master; then
 		echo_date "'origin/master' does not exist; fetching..." >&2 && exit 1
@@ -21,9 +17,13 @@ get_origin_master_version() {
 		if ! cd "${temp_dir}"; then
 			echo_date "Failed to 'cd' into '${temp_dir}'" >&2 && exit 1
 		fi
-		bump-my-version show current_version
+		get_version
 	)
 }
+get_version() { bump-my-version show current_version; }
+has_one_commit() { git rev-parse --verify HEAD >/dev/null 2>&1; }
+have_command() { command -v "$1" >/dev/null 2>&1; }
+have_bump_my_version() { have_command 'bump-my-version'; }
 
 main() {
 	if ! has_one_commit; then
@@ -39,7 +39,7 @@ main() {
 	if ! have_bump_my_version; then
 		echo_date "'bump-my-version' must be available" >&2 && return 1
 	fi
-	current=$(bump-my-version show_current 2>/dev/null)
+	current=$(get_version)
 	if [ $# -ne 0 ]; then
 		echo_date "Failed to get current version" >&2 && return 1
 	fi
