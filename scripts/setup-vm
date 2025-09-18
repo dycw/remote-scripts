@@ -12,7 +12,8 @@ main() {
 	setup_env_vars
 	setup_just
 	setup_neovim
-	setup_lazy_vim # after neovim
+	setup_lazyvim        # after neovim
+	setup_neovim_plugins # after LazyVim
 	setup_starship
 }
 
@@ -69,12 +70,18 @@ setup_neovim() {
 	ln -s nvim-linux-x86_64/bin/nvim .
 }
 
-setup_lazy_vim() {
+setup_lazyvim() {
 	rm -rf "${HOME}"/.config/nvim/
 	rm -rf "${HOME}"/.local/share/
 	rm -rf "${HOME}"/.local/state/
 	rm -rf "${HOME}"/.cache/nvim/
 	git clone https://github.com/LazyVim/starter "${HOME}"/.config/nvim
+}
+
+setup_neovim_plugins() {
+	cat <<'EOF' >>"${HOME}"/.config/nvim/lua/plugins/auto-save.lua
+return { "pocco81/auto-save.nvim" }
+EOF
 }
 
 setup_starship() {
