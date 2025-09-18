@@ -35,7 +35,7 @@ setup_just() {
 	cat <<'EOF' >>"${HOME}"/.bashrc
 
 # just
-eval "$(direnv hook bash)"
+export PATH="${HOME}/bin${PATH:+:${PATH}}"
 EOF
 }
 
