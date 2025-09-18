@@ -12,6 +12,7 @@ main() {
 	setup_env_vars
 	setup_just
 	setup_neovim
+	setup_lazy_vim # after neovim
 	setup_starship
 }
 
@@ -49,25 +50,31 @@ setup_env_vars() {
 
 # env vars
 export EDITOR='nvim'
+export PATH="${HOME}/bin${PATH:+:${PATH}}"
 EOF
 }
 
 setup_just() {
 	curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to "${HOME}"/bin
-	cat <<'EOF' >>"${HOME}"/.bashrc
-
-# just
-export PATH="${HOME}/bin${PATH:+:${PATH}}"
-EOF
 }
 
 setup_neovim() {
-	sudo apt install -y neovim
-	cat <<'EOF' >>"${HOME}"/.bashrc
+	temp_dir=$(mktemp -d)
+	trap 'rm -rf "${temp_dir}"' EXIT
+	cd "${temp_dir}" || exit 1
+	curl -LO https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linux-x86_64.tar.gz
+	tar xzvf nvim-linux-x86_64.tar.gz
+	cp -r nvim-linux-x86_64 "${HOME}"/bin
+	cd "${HOME}" || exit 1
+	ln -s nvim-linux-x86_64/bin/nvim .
+}
 
-# neovim
-alias n='nvim'
-EOF
+setup_lazy_vim() {
+	rm -rf "${HOME}"/.config/nvim/
+	rm -rf "${HOME}"/.local/share/
+	rm -rf "${HOME}"/.local/state/
+	rm -rf "${HOME}"/.cache/nvim/
+	git clone https://github.com/LazyVim/starter "${HOME}"/.config/nvim
 }
 
 setup_starship() {
