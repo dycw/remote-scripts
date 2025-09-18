@@ -9,6 +9,7 @@ main() {
 	setup_aliases
 	setup_bottom
 	setup_direnv
+	setup_env_vars
 	setup_just
 	setup_neovim
 	setup_starship
@@ -38,8 +39,16 @@ setup_direnv() {
 	curl -sfL https://direnv.net/install.sh | bash
 	cat <<'EOF' >>"${HOME}"/.bashrc
 
-# just
+# direnv
 eval "$(direnv hook bash)"
+EOF
+}
+
+setup_env_vars() {
+	cat <<'EOF' >>"${HOME}"/.bashrc
+
+# env vars
+export EDITOR='nvim'
 EOF
 }
 
