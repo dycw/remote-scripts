@@ -1,0 +1,73 @@
+#!/usr/bin/env sh
+
+echo_date() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
+
+main() {
+	if [ $# -ne 0 ]; then
+		echo_date "'setup-vm' accepts 0 arguments; got $#" >&2 && return 1
+	fi
+	setup_aliases
+	setup_bottom
+	setup_direnv
+	setup_just
+	setup_neovim
+	setup_starship
+}
+
+setup_aliases() {
+	cat <<'EOF' >>"${HOME}"/.bashrc
+
+# aliases
+alias ~='cd "${HOME}"'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias l='ls -al'
+EOF
+}
+
+setup_bottom() {
+	temp_dir=$(mktemp -d)
+	trap 'rm -rf "${temp_dir}"' EXIT
+	cd "${temp_dir}" || exit 1
+	curl -LO https://github.com/ClementTsang/bottom/releases/download/0.11.1/bottom_0.11.1-1_amd64.deb
+	sudo dpkg -i bottom_*_amd64.deb
+}
+
+setup_direnv() {
+	curl -sfL https://direnv.net/install.sh | bash
+	cat <<'EOF' >>"${HOME}"/.bashrc
+
+# just
+eval "$(direnv hook bash)"
+EOF
+}
+
+setup_just() {
+	curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to "${HOME}"/bin
+	cat <<'EOF' >>"${HOME}"/.bashrc
+
+# just
+export PATH="${HOME}/bin${PATH:+:${PATH}}"
+EOF
+}
+
+setup_neovim() {
+	sudo apt install -y neovim
+	cat <<'EOF' >>"${HOME}"/.bashrc
+
+# neovim
+alias n='nvim'
+EOF
+}
+
+setup_starship() {
+	curl -sS https://starship.rs/install.sh | sh
+	cat <<'EOF' >>"${HOME}"/.bashrc
+
+# starship
+eval "$(starship init bash)"
+EOF
+}
+
+main "$@"
