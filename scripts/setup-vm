@@ -66,8 +66,10 @@ setup_neovim() {
 	curl -LO https://github.com/neovim/neovim/releases/download/v0.11.4/nvim-linux-x86_64.tar.gz
 	tar xzvf nvim-linux-x86_64.tar.gz
 	cp -r nvim-linux-x86_64 "${HOME}"/bin
-	cd "${HOME}" || exit 1
-	ln -s nvim-linux-x86_64/bin/nvim .
+	(
+		cd "${HOME}"/bin || exit 1
+		ln -s nvim-linux-x86_64/bin/nvim .
+	)
 }
 
 setup_lazyvim() {
