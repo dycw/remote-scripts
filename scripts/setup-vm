@@ -10,6 +10,7 @@ main() {
 	setup_bottom
 	setup_direnv
 	setup_env_vars
+	setup_git
 	setup_just
 	setup_neovim
 	setup_lazyvim        # after neovim
@@ -55,6 +56,14 @@ export PATH="${HOME}/bin${PATH:+:${PATH}}"
 EOF
 }
 
+setup_git() {
+	if [ "$(whoami)" = 'root' ]; then
+		apt install -y git
+	else
+		sudo apt install -y git
+	fi
+}
+
 setup_just() {
 	curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to "${HOME}"/bin
 }
@@ -83,6 +92,7 @@ setup_lazyvim() {
 	rm -rf "${HOME}"/.local/share/
 	rm -rf "${HOME}"/.local/state/
 	rm -rf "${HOME}"/.cache/nvim/
+	command -v git >/dev/null 2>&1 || setup_git
 	git clone https://github.com/LazyVim/starter "${HOME}"/.config/nvim
 }
 
