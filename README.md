@@ -12,20 +12,8 @@ curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/mast
 curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/check-version-bumped | sh
 ```
 
-## `generate-deploy-key`
-
-```console
-curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/generate-deploy-key | sh - -- KEY_NAME HOST_NAME
-```
-
 ## `get-public-ip`
 
 ```console
 curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/get-public-ip | sh
-```
-
-## `setup-vm`
-
-```console
-curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/setup-vm | sh
 ```
