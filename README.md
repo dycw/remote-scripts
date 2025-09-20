@@ -12,6 +12,11 @@ curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/mast
 curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/check-version-bumped | sh
 ```
 
+## `generate-deploy-key`
+
+```console
+curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/generate-deploy-key | sh
+```
 ## `get-public-ip`
 
 ```console
