@@ -15,8 +15,9 @@ curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/mast
 ## `generate-deploy-key`
 
 ```console
-curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/generate-deploy-key | sh
+curl -fsSL https://raw.githubusercontent.com/dycw/remote-scripts/refs/heads/master/scripts/generate-deploy-key | sh - -- KEY_NAME HOST_NAME
 ```
+
 ## `get-public-ip`
 
 ```console
