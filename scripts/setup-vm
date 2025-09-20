@@ -35,7 +35,11 @@ setup_bottom() {
 	trap 'rm -rf "${temp_dir}"' EXIT
 	cd "${temp_dir}" || exit 1
 	curl -LO https://github.com/ClementTsang/bottom/releases/download/0.11.1/bottom_0.11.1-1_amd64.deb
-	sudo dpkg -i bottom_*_amd64.deb
+	if [ "$(whoami)" = 'root' ]; then
+		dpkg -i bottom_*_amd64.deb
+	else
+		sudo dpkg -i bottom_*_amd64.deb
+	fi
 }
 
 setup_direnv() {
