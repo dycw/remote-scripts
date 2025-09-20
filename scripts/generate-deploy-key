@@ -13,7 +13,6 @@ main() {
 	ssh-keygen -f "${path}" -N '' -t ed25519 -C "$(whoami)@$(hostname)"
 	echo "Your public key is:"
 	sed 's/^/    /' "${path}.pub"
-
 	cat >>"${HOME}/.ssh/config" <<EOF
 
 
